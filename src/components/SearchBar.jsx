@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import business from "./Business";
+import {TextField, Button} from "@mui/material";
 
 const SortByOptions = {
     'Best Matching': 'best_match',
@@ -11,25 +11,35 @@ const SortByOptions = {
 export default function SearchBar({onSearch}) {
     const [term, setTerm] = useState("");
     const [location, setLocation] = useState("");
-    const [sortBy, setSortBy] = useState("");
+    const [sortBy, setSortBy] = useState("best_match");
+
+
+
 
     const SortingOptions = () => {
         return Object.keys(SortByOptions).map((label) => {
             const value = SortByOptions[label];
+            const active =value===sortBy;
             return (
-                <div
+                <Button
                     key={label}
-                    onClick={() => setSortBy(label)}>
-                    {value}
-                </div>
+                    onClick={() => setSortBy(value)}
+                    style={{
+
+                        background: active ? "#111827" : "#f7f7f7",
+                        color: active ? "#fff" : "#333",
+                    }}
+                >
+                    {label}
+                </Button>
             );
         });
     };
     const handleSubmit = (e) => {
         e.preventDefault();
-
+        // Use event.preventDefault() to prevent the default action of clicking the button.
         if (onSearch) {
-            onSearch({ term, location, sortBy });
+            onSearch(term, location, sortBy);
         }
 
     }
@@ -40,17 +50,38 @@ export default function SearchBar({onSearch}) {
             </div>
 
             <form onSubmit={handleSubmit}>
-                <input
-                    type="text"
-                    placeholder="Search by name"
-                    value={term}
-                    onChange={(e) => setTerm(e.target.value)}/>
-                <input
-                    type="text"
-                    placeholder="Location"
-                    value={location}
-                    onChange={(e) => setLocation(e.target.value)}/>
-                <button type="submit">Search</button>
+
+
+                <TextField size="small"
+                           type="text"
+                           placeholder="Search by name..."
+                           value={term}
+                           onChange={(e) => setTerm(e.target.value)}
+                           sx={{
+                               input: {
+                                   color: "white",
+                                   "&::placeholder": {
+                                       color: "rgba(255,255,255,0.9)",
+                                       opacity: 1,
+                                   }
+                               }
+                    }}
+                />
+                <TextField size="small"
+                           type ="text"
+                           placeholder="Where?"
+                           value={location}
+                           onChange={(e) => setLocation(e.target.value)}
+                           sx={{
+                               input: {
+                                   color: "white",
+                                   "&::placeholder": {
+                                       color: "rgba(255,255,255,0.9)",
+                                       opacity: 1,
+                                   }
+                               }
+                           }}/>
+                <Button type="submit" variant="contained">Search</Button>
 
             </form>
 
